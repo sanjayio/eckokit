@@ -1,10 +1,10 @@
-'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { Button } from '@/components/public/ui/button'
-import { Checkbox } from '@/components/public/ui/checkbox'
+import { Button } from "@/components/public/ui/button";
+import { Checkbox } from "@/components/public/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -12,37 +12,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/public/ui/form'
-import { Input } from '@/components/public/ui/input'
+} from "@/components/public/ui/form";
+import { Input } from "@/components/public/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/public/ui/select'
-import { Textarea } from '@/components/public/ui/textarea'
-import { formSchema } from '@/lib/form-schema'
+} from "@/components/public/ui/select";
+import { Textarea } from "@/components/public/ui/textarea";
+import { landingContactFormSchema } from "@/lib/form-schema";
 
-type Schema = z.infer<typeof formSchema>
+type Schema = z.infer<typeof landingContactFormSchema>;
 
 export function ContactForm() {
   const form = useForm<Schema>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(landingContactFormSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      company: '',
-      employees: '',
-      message: '',
+      name: "",
+      email: "",
+      company: "",
+      employees: "",
+      message: "",
       agree: false,
     } as unknown as Schema,
-  })
+  });
 
   const handleSubmit = form.handleSubmit(async (data: Schema) => {
     // TODO: Implement form submission
-    console.log(data)
-  })
+    console.log(data);
+  });
 
   return (
     <Form {...form}>
@@ -62,8 +62,8 @@ export function ContactForm() {
                   type="text"
                   value={field.value}
                   onChange={(e) => {
-                    const val = e.target.value
-                    field.onChange(val)
+                    const val = e.target.value;
+                    field.onChange(val);
                   }}
                   placeholder="First and last name"
                 />
@@ -85,8 +85,8 @@ export function ContactForm() {
                   type="text"
                   value={field.value}
                   onChange={(e) => {
-                    const val = e.target.value
-                    field.onChange(val)
+                    const val = e.target.value;
+                    field.onChange(val);
                   }}
                   placeholder="me@company.com"
                 />
@@ -108,8 +108,8 @@ export function ContactForm() {
                   type="text"
                   value={field.value}
                   onChange={(e) => {
-                    const val = e.target.value
-                    field.onChange(val)
+                    const val = e.target.value;
+                    field.onChange(val);
                   }}
                   placeholder="Company name"
                 />
@@ -126,11 +126,11 @@ export function ContactForm() {
           name="employees"
           render={({ field }) => {
             const options = [
-              { value: '1', label: '1' },
-              { value: '2-10', label: '2-10' },
-              { value: '11-50', label: '11-50' },
-              { value: '51-500', label: '51-500' },
-            ]
+              { value: "1", label: "1" },
+              { value: "2-10", label: "2-10" },
+              { value: "11-50", label: "11-50" },
+              { value: "51-500", label: "51-500" },
+            ];
             return (
               <FormItem className="w-full">
                 <FormLabel>Number of employees </FormLabel>
@@ -151,7 +151,7 @@ export function ContactForm() {
 
                 <FormMessage />
               </FormItem>
-            )
+            );
           }}
         />
 
@@ -202,5 +202,5 @@ export function ContactForm() {
         </div>
       </form>
     </Form>
-  )
+  );
 }

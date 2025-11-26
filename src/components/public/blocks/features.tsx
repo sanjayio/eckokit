@@ -24,7 +24,7 @@ const items = [
 
 export const Features = () => {
   return (
-    <section id="why-zenvoflow" className="pb-28 lg:pb-32">
+    <section id="why-eckokit" className="pb-28 lg:pb-32">
       <div className="container">
         {/* Top dashed line with text */}
         <div className="relative flex items-center justify-center">
@@ -40,7 +40,7 @@ export const Features = () => {
             Built for small businesses and startups
           </h2>
           <p className="text-muted-foreground leading-snug">
-            ZenvoFlow is built using the latest and greatest AI Voice Agents and
+            Eckokit is built using the latest and greatest AI Voice Agents and
             Automation Platforms, with a focus on simplicity, ease of use, and
             scalability.
           </p>

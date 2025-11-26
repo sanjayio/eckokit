@@ -20,7 +20,7 @@ const items = [
     image: "placeholder.svg",
   },
   {
-    quote: "My clients never forget to leave a review, thanks to ZenvoFlow.",
+    quote: "My clients never forget to leave a review, thanks to Eckokit.",
     role: "Electrician",
     location: "Newcastle, Australia",
     image: "placeholder.svg",
@@ -58,7 +58,7 @@ export const Testimonials = ({
             <p className="text-muted-foreground max-w-md leading-snug">
               We&apos;re fortunate to have a lot of small business owners as
               customers, and we&apos;re proud to serve them. Here are some ways
-              ZenvoFlow is helping our customers.
+              Eckokit is helping our customers.
             </p>
           </div>
 

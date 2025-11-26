@@ -26,16 +26,16 @@ const ITEMS = [
     href: "#features",
     dropdownItems: [
       {
-        title: "Why Zenvoflow?",
-        href: "/#why-zenvoflow",
+        title: "Why Eckokit?",
+        href: "/#why-eckokit",
         description:
-          "Learn why ZenvoFlow is the best way to build and automate your telephony automation workflows.",
+          "Learn why Eckokit is the best way to build and automate your telephony automation workflows.",
       },
       {
         title: "How it works",
         href: "/#how-it-works",
         description:
-          "Learn how ZenvoFlow is redefining telephony automation workflows with voice agents.",
+          "Learn how Eckokit is redefining telephony automation workflows with voice agents.",
       },
     ],
   },

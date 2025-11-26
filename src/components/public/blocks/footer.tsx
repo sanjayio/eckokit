@@ -1,24 +1,24 @@
-import Link from 'next/link'
+import Link from "next/link";
 
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from "lucide-react";
 
-import { Button } from '@/components/public/ui/button'
+import { Button } from "@/components/public/ui/button";
 
 export function Footer() {
   const navigation = [
-    { name: 'Why Zenvoflow?', href: '/#why-zenvoflow' },
-    { name: 'About Us', href: '/about' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'FAQ', href: '/faq' },
-    { name: 'Contact', href: '/contact' },
-  ]
+    { name: "Why Eckokit?", href: "/#why-eckokit" },
+    { name: "About Us", href: "/about" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "FAQ", href: "/faq" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   const social = [
-    { name: 'Xwitter', href: 'https://x.com/ausrobdev' },
-    { name: 'LinkedIn', href: '#' },
-  ]
+    { name: "Xwitter", href: "https://x.com/ausrobdev" },
+    { name: "LinkedIn", href: "#" },
+  ];
 
-  const legal = [{ name: 'Privacy Policy', href: '/privacy' }]
+  const legal = [{ name: "Privacy Policy", href: "/privacy" }];
 
   return (
     <footer className="flex flex-col items-center gap-14 pt-28 lg:pt-32">
@@ -77,31 +77,31 @@ export function Footer() {
       <div className="text-primary mt-10 w-full md:mt-14 lg:mt-20">
         <svg
           width="400"
-          height="120"
-          viewBox="0 0 400 120"
+          height="180"
+          viewBox="0 0 400 180"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="w-full"
         >
           <text
             x="50%"
-            y="60%"
+            y="70%"
             textAnchor="middle"
             dominantBaseline="middle"
             fontFamily="Inter, system-ui, Arial, sans-serif"
             fontSize="180"
             fontWeight="bold"
-            fill="url(#zenvoflowGradient)"
+            fill="url(#eckokitGradient)"
           >
-            zenvoflow
+            ecko
           </text>
           <defs>
             <linearGradient
-              id="zenvoflowGradient"
+              id="eckokitGradient"
               x1="0"
-              y1="0"
+              y1="90"
               x2="0"
-              y2="120"
+              y2="180"
               gradientUnits="userSpaceOnUse"
             >
               <stop stopColor="currentColor" />
@@ -111,5 +111,5 @@ export function Footer() {
         </svg>
       </div>
     </footer>
-  )
+  );
 }
