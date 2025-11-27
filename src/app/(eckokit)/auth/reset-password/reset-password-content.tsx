@@ -18,18 +18,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
 
-const signInSchema = z.object({
-  email: z.email().min(1),
-  password: z.string().min(8),
+const resetPasswordSchema = z.object({
+  password: z.string().min(6),
 });
 
-type SignInForm = z.infer<typeof signInSchema>;
+type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
-export default function SignInContent() {
+export default function ResetPasswordContent() {
   const router = useRouter();
+  const token = useSearchParams().get("token");
+  const error = useSearchParams().get("error");
+
   useEffect(() => {
     authClient.getSession().then((session) => {
       if (session.data !== null) {
@@ -38,28 +40,60 @@ export default function SignInContent() {
     });
   }, [router]);
 
-  const form = useForm<SignInForm>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<ResetPasswordForm>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: "",
       password: "",
     },
   });
 
   const { isSubmitting } = form.formState;
 
-  const handleSignIn = async (data: SignInForm) => {
-    await authClient.signIn.email(
-      { ...data, callbackURL: "/dashboard" },
+  if (token === null || error !== null) {
+    return (
+      <div className="flex pb-8 lg:h-screen lg:pb-0">
+        <div className="hidden w-1/2 bg-gray-100 lg:block">
+          <Image
+            width={1000}
+            height={1000}
+            src="/waveform.jpg"
+            alt="Waveform image"
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="flex w-full items-center justify-center lg:w-1/2">
+          <div className="w-full max-w-md space-y-8 px-4">
+            <div className="text-center">
+              <h2 className="mt-6 text-3xl font-bold">Uh oh!</h2>
+              <p className="text-muted-foreground mt-2 text-sm">
+                We&apos;ve receoved an invalid token or it has expired. Please
+                try again.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleResetPassword = async (data: ResetPasswordForm) => {
+    await authClient.resetPassword(
+      {
+        newPassword: data.password,
+        token: token,
+      },
       {
         onError: (error) => {
-          if (error.error.code === "EMAIL_NOT_VERIFIED") {
-            router.push(`/auth/verify-email?email=${data.email}`);
-          }
-          toast.error(error.error.message || "Failed to sign in");
+          toast.error(error.error.message || "Failed to reset password");
         },
         onSuccess: () => {
-          toast.success("Sign in successful");
+          toast.success("Password reset successful", {
+            description: "Redirection to login...",
+          });
+          setTimeout(() => {
+            router.push("/auth/sign-in");
+          }, 1000);
         },
       }
     );
@@ -80,33 +114,18 @@ export default function SignInContent() {
       <div className="flex w-full items-center justify-center lg:w-1/2">
         <div className="w-full max-w-md space-y-8 px-4">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold">Welcome back</h2>
+            <h2 className="mt-6 text-3xl font-bold">Reset your password</h2>
             <p className="text-muted-foreground mt-2 text-sm">
-              Please sign in to your account
+              Please enter your new password to reset your account password.
             </p>
           </div>
 
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleSignIn)}
+              onSubmit={form.handleSubmit(handleResetPassword)}
               className="space-y-4"
             >
               <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="example@email.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
@@ -115,38 +134,27 @@ export default function SignInContent() {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="Password" {...field} />
+                          <PasswordInput
+                            placeholder="New password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
+
                 <Button
                   type="submit"
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Signing in..." : "Sign in"}
+                  {isSubmitting ? "Resetting password..." : "Reset password"}
                 </Button>
               </div>
             </form>
           </Form>
-
-          <div className="mt-6">
-            <div className="mt-3 text-center text-sm">
-              Forgot your password?{" "}
-              <Link href="/auth/forgot-password" className="underline">
-                Reset password
-              </Link>
-            </div>
-            <div className="mt-3 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/auth/sign-up" className="underline">
-                Sign up
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
     </div>

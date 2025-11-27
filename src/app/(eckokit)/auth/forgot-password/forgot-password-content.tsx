@@ -19,15 +19,12 @@ import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PasswordInput } from "@/components/ui/password-input";
 
-const signUpSchema = z.object({
-  name: z.string().min(1),
+const forgotPasswordSchema = z.object({
   email: z.email().min(1),
-  password: z.string().min(8),
 });
 
-type SignUpForm = z.infer<typeof signUpSchema>;
+type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
 export default function SignInContent() {
   const router = useRouter();
@@ -39,35 +36,32 @@ export default function SignInContent() {
     });
   }, [router]);
 
-  const form = useForm<SignUpForm>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      name: "",
       email: "",
-      password: "",
     },
   });
 
   const { isSubmitting } = form.formState;
 
-  const handleSignUp = async (data: SignUpForm) => {
-    const res = await authClient.signUp.email(
-      { ...data, callbackURL: "/dashboard" },
+  const handleForgotPassword = async (data: ForgotPasswordForm) => {
+    await authClient.requestPasswordReset(
+      {
+        ...data,
+        redirectTo: "/auth/reset-password",
+      },
       {
         onError: (error) => {
-          toast.error(error.error.message || "Failed to sign up");
+          toast.error(
+            error.error.message || "Failed to send password reset email"
+          );
         },
         onSuccess: () => {
-          toast.success(
-            "Sign up successful, please check your email for verification"
-          );
+          toast.success("Password reset email sent");
         },
       }
     );
-
-    if (res.error === null && !res.data.user.emailVerified) {
-      router.push(`/auth/verify-email?email=${data.email}`);
-    }
   };
 
   return (
@@ -85,33 +79,20 @@ export default function SignInContent() {
       <div className="flex w-full items-center justify-center lg:w-1/2">
         <div className="w-full max-w-md space-y-8 px-4">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold">Create an account</h2>
+            <h2 className="mt-6 text-3xl font-bold">Forgot your password?</h2>
             <p className="text-muted-foreground mt-2 text-sm">
-              Please create an account to continue
+              Please enter your email address to reset your account password. If
+              your email doesn&apos;t match any of our records, you will not
+              receive any email.
             </p>
           </div>
 
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleSignUp)}
+              onSubmit={form.handleSubmit(handleForgotPassword)}
               className="space-y-4"
             >
               <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
                 <div className="grid gap-2">
                   <FormField
                     control={form.control}
@@ -127,27 +108,13 @@ export default function SignInContent() {
                     )}
                   />
                 </div>
-                <div className="grid gap-2">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <PasswordInput placeholder="Password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+
                 <Button
                   type="submit"
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Signing up..." : "Sign up"}
+                  {isSubmitting ? "Sending reset email..." : "Send reset email"}
                 </Button>
               </div>
             </form>
@@ -155,7 +122,7 @@ export default function SignInContent() {
 
           <div className="mt-6">
             <div className="mt-6 text-center text-sm">
-              Already have an account?{" "}
+              Remember your password?{" "}
               <Link href="/auth/sign-in" className="underline">
                 Sign in
               </Link>
