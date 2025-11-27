@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
-import { Background } from '@/components/public/background'
-import { FAQ } from '@/components/public/blocks/faq'
-import { Testimonials } from '@/components/public/blocks/testimonials'
-import { DashedLine } from '@/components/public/dashed-line'
+import { Background } from "@/components/landing/background";
+import { FAQ } from "@/components/landing/blocks/faq";
+import { Testimonials } from "@/components/landing/blocks/testimonials";
+import { DashedLine } from "@/components/landing/dashed-line";
 
 const Page = () => {
   return (
@@ -16,7 +16,7 @@ const Page = () => {
       <DashedLine className="mx-auto max-w-xl" />
       <Testimonials dashedLineClassName="hidden" />
     </Background>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

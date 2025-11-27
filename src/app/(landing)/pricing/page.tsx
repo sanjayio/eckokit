@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 
-import { Background } from '@/components/public/background'
-import { Pricing } from '@/components/public/blocks/pricing'
-import { PricingTable } from '@/components/public/blocks/pricing-table'
+import { Background } from "@/components/landing/background";
+import { Pricing } from "@/components/landing/blocks/pricing";
+import { PricingTable } from "@/components/landing/blocks/pricing-table";
 
 const Page = () => {
   return (
@@ -10,7 +10,7 @@ const Page = () => {
       <Pricing className="py-28 text-center lg:pt-44 lg:pb-32" />
       <PricingTable />
     </Background>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
