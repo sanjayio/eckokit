@@ -7,7 +7,7 @@ import { Pricing } from "@/components/landing/blocks/pricing";
 import { ResourceAllocation } from "@/components/landing/blocks/resource-allocation";
 import { Testimonials } from "@/components/landing/blocks/testimonials";
 
-export default function Home() {
+export default function Page() {
   return (
     <>
       <Background className="via-muted to-muted/80">

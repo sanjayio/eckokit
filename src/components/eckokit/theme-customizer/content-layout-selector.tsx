@@ -1,0 +1,36 @@
+"use client";
+
+import { Label } from "@/components/ui/label";
+import { useThemeConfig } from "@/components/eckokit/active-theme";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
+type ContentLayoutValue = "full";
+
+export function ContentLayoutSelector() {
+  const { theme, setTheme } = useThemeConfig();
+
+  return (
+    <div className="hidden flex-col gap-4 lg:flex">
+      <Label>Content layout</Label>
+      <ToggleGroup
+        value={theme.contentLayout}
+        type="single"
+        onValueChange={(value: ContentLayoutValue) =>
+          setTheme({ ...theme, contentLayout: value })
+        }
+        className="*:border-input w-full gap-4 *:rounded-md *:border"
+      >
+        <ToggleGroupItem variant="outline" value="full">
+          Full
+        </ToggleGroupItem>
+        <ToggleGroupItem
+          variant="outline"
+          value="centered"
+          className="data-[variant=outline]:border-l-1"
+        >
+          Centered
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
+  );
+}
