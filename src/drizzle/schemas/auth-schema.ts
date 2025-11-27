@@ -11,6 +11,7 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updated_at")
     .$onUpdate(() => new Date())
     .notNull(),
+  leadSource: text("lead_source").notNull(),
 });
 
 export const session = pgTable(

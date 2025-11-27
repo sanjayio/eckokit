@@ -20,11 +20,27 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const leadSourceOptions = [
+  { label: "Google", value: "google" },
+  { label: "Facebook", value: "facebook" },
+  { label: "Twitter", value: "twitter" },
+  { label: "LinkedIn", value: "linkedin" },
+  { label: "Other", value: "other" },
+];
 
 const signUpSchema = z.object({
   name: z.string().min(1),
   email: z.email().min(1),
   password: z.string().min(8),
+  leadSource: z.enum(leadSourceOptions.map((option) => option.value)),
 });
 
 type SignUpForm = z.infer<typeof signUpSchema>;
@@ -45,6 +61,7 @@ export default function SignInContent() {
       name: "",
       email: "",
       password: "",
+      leadSource: "google",
     },
   });
 
@@ -136,6 +153,35 @@ export default function SignInContent() {
                         <FormLabel>Password</FormLabel>
                         <FormControl>
                           <PasswordInput placeholder="Password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <FormField
+                    control={form.control}
+                    name="leadSource"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Where did you hear about us?</FormLabel>
+                        <FormControl>
+                          <Select {...field}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Where did you hear about us?" />
+                            </SelectTrigger>
+                            <SelectContent className="w-full">
+                              {leadSourceOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
