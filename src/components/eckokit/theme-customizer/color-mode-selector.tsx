@@ -15,7 +15,6 @@ export function ColorModeSelector() {
         value={theme}
         type="single"
         onValueChange={(value: SetStateAction<string>) => setTheme(value)}
-        className="*:border-input w-full gap-4 *:rounded-md *:border"
       >
         <ToggleGroupItem variant="outline" value="light">
           Light

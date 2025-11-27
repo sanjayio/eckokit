@@ -12,7 +12,6 @@ interface ProvidersProps {
     preset: any;
     scale: any;
     radius: any;
-    contentLayout: any;
   };
   children: React.ReactNode;
 }

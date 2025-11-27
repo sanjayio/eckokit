@@ -19,7 +19,6 @@ export function ThemeRadiusSelector() {
         onValueChange={(value: RadiusValue) =>
           setTheme({ ...theme, radius: value })
         }
-        className="*:border-input w-full gap-3 *:rounded-md *:border"
       >
         <ToggleGroupItem variant="outline" value="none">
           <BanIcon />

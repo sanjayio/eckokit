@@ -165,7 +165,7 @@ export const userNavItems: NavGroup[] = [
 export function NavMain() {
   const pathname = usePathname();
   const { isMobile } = useSidebar();
-  const [navItems] = useState(userNavItems);
+  const [navItems] = useState(orgNavItems);
 
   return (
     <>

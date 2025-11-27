@@ -1,13 +1,8 @@
-import {
-  BadgeCheck,
-  Bell,
-  ChevronRightIcon,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,13 +13,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { authClient } from "@/lib/auth/auth-client";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function UserMenu() {
+  const { data: session } = authClient.useSession();
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    authClient.signOut().then(() => {
+      router.push("/auth/sign-in");
+    });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          <AvatarFallback className="rounded-lg">JS</AvatarFallback>
+          <AvatarFallback className="rounded-lg">
+            {session?.user?.name?.charAt(0)}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -34,12 +43,16 @@ export default function UserMenu() {
         <DropdownMenuLabel className="p-0">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar>
-              <AvatarFallback className="rounded-lg">JS</AvatarFallback>
+              <AvatarFallback className="rounded-lg">
+                {session?.user?.name?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">John Smith</span>
+              <span className="truncate font-semibold">
+                {session?.user?.name}
+              </span>
               <span className="text-muted-foreground truncate text-xs">
-                john.smith@example.com
+                {session?.user?.email}
               </span>
             </div>
           </div>
@@ -67,7 +80,7 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSignOut}>
           <div className="flex items-center gap-2">
             <LogOut />
             Log out

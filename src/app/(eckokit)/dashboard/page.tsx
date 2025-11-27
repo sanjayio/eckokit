@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 
 export default function Dashboard() {
@@ -15,7 +14,6 @@ export default function Dashboard() {
     <div>
       <h1>Dashboard</h1>
       <p>Welcome, {session?.user?.name}</p>
-      <Button onClick={() => authClient.signOut()}>Sign out</Button>
     </div>
   );
 }

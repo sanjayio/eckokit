@@ -63,9 +63,6 @@ export function ActiveThemeProvider({
       body.removeAttribute("data-theme-preset");
     }
 
-    setThemeCookie("theme_content_layout", theme.contentLayout);
-    body.setAttribute("data-theme-content-layout", theme.contentLayout);
-
     if (theme.scale != "none") {
       setThemeCookie("theme_scale", theme.scale);
       body.setAttribute("data-theme-scale", theme.scale);
@@ -73,7 +70,7 @@ export function ActiveThemeProvider({
       setThemeCookie("theme_scale", null);
       body.removeAttribute("data-theme-scale");
     }
-  }, [theme.preset, theme.radius, theme.scale, theme.contentLayout]);
+  }, [theme.preset, theme.radius, theme.scale]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

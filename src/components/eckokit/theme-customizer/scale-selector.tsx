@@ -20,7 +20,6 @@ export function ThemeScaleSelector() {
           onValueChange={(value: ScaleValue) =>
             setTheme({ ...theme, scale: value })
           }
-          className="*:border-input w-full gap-3 *:rounded-md *:border"
         >
           <ToggleGroupItem variant="outline" value="none">
             <BanIcon />

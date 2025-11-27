@@ -26,8 +26,6 @@ export default async function RootLayout({
       DEFAULT_THEME.scale) as any,
     radius: (cookieStore.get("theme_radius")?.value ??
       DEFAULT_THEME.radius) as any,
-    contentLayout: (cookieStore.get("theme_content_layout")?.value ??
-      DEFAULT_THEME.contentLayout) as any,
   };
 
   const bodyAttributes = Object.fromEntries(

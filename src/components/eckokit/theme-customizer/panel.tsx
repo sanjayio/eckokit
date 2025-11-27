@@ -9,10 +9,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   PresetSelector,
-  SidebarModeSelector,
   ThemeScaleSelector,
   ColorModeSelector,
-  ContentLayoutSelector,
   ThemeRadiusSelector,
   ResetThemeButton,
 } from "@/components/eckokit/theme-customizer/index";
@@ -37,8 +35,6 @@ export function ThemeCustomizerPanel() {
           <ThemeScaleSelector />
           <ThemeRadiusSelector />
           <ColorModeSelector />
-          <ContentLayoutSelector />
-          <SidebarModeSelector />
         </div>
         <ResetThemeButton />
       </DropdownMenuContent>
