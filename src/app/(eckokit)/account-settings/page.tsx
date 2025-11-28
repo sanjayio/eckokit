@@ -1,6 +1,7 @@
 import { AccountDeletion } from "@/components/eckokit/account-settings/account-deletion";
 import { AccountLinking } from "@/components/eckokit/account-settings/account-linking";
 import { ChangePasswordForm } from "@/components/eckokit/account-settings/change-password-form";
+import { PasskeyManagement } from "@/components/eckokit/account-settings/passkey-management";
 import { ProfileUpdateForm } from "@/components/eckokit/account-settings/profile-update-form";
 import { SessionManagement } from "@/components/eckokit/account-settings/session-management";
 import { SetPasswordButton } from "@/components/eckokit/account-settings/set-password-button";
@@ -165,7 +166,8 @@ async function SecurityTab({
   email: string;
   isTwoFactorEnabled: boolean;
 }) {
-  const [accounts] = await Promise.all([
+  const [passkeys, accounts] = await Promise.all([
+    auth.api.listPasskeys({ headers: await headers() }),
     auth.api.listUserAccounts({ headers: await headers() }),
   ]);
 
@@ -213,6 +215,15 @@ async function SecurityTab({
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Passkeys</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PasskeyManagement passkeys={passkeys} />
+        </CardContent>
+      </Card>
     </div>
   );
 }

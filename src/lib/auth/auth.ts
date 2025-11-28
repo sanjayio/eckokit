@@ -8,6 +8,7 @@ import { sendWelcomeEmail } from "../emails/welcome-email";
 import { createAuthMiddleware } from "better-auth/api";
 import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
 import { twoFactor } from "better-auth/plugins/two-factor";
+import { passkey } from "@better-auth/passkey";
 
 export const auth = betterAuth({
   appName: "Eckokit",
@@ -43,7 +44,7 @@ export const auth = betterAuth({
       maxAge: 60 * 5, // 5 minutes
     },
   },
-  plugins: [nextCookies(), twoFactor()],
+  plugins: [nextCookies(), twoFactor(), passkey()],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path.startsWith("/sign-up")) {

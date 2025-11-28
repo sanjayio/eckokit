@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Separator } from "@/components/ui/separator";
 import { SocialAuthButtons } from "@/components/eckokit/auth/social-auth-buttons";
+import { PasskeyButton } from "@/components/eckokit/auth/passkey-button";
 
 const signInSchema = z.object({
   email: z.email().min(1),
@@ -102,7 +103,11 @@ export default function SignInContent() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="example@email.com" {...field} />
+                          <Input
+                            autoComplete="email webauthn"
+                            placeholder="example@email.com"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -117,7 +122,11 @@ export default function SignInContent() {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="Password" {...field} />
+                          <PasswordInput
+                            autoComplete="current-password webauthn"
+                            placeholder="Password"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -139,6 +148,7 @@ export default function SignInContent() {
 
           <div className="grid grid-cols-1 gap-3">
             <SocialAuthButtons />
+            <PasskeyButton />
           </div>
 
           <div className="mt-6">
