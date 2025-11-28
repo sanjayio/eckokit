@@ -15,6 +15,17 @@ import {
   user as userRole,
 } from "@/components/eckokit/auth/permissions";
 import { admin } from "better-auth/plugins/admin";
+import { organization } from "better-auth/plugins/organization";
+import { sendOrganizationInviteEmail } from "../emails/organization-invite-email";
+import { member } from "@/drizzle/schemas/auth-schema";
+import { and, desc, eq } from "drizzle-orm";
+import { stripe } from "@better-auth/stripe";
+import Stripe from "stripe";
+import { STRIPE_PLANS } from "@/lib/auth/stripe";
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-11-17.clover",
+});
 
 export const auth = betterAuth({
   appName: "Eckokit",
@@ -61,6 +72,43 @@ export const auth = betterAuth({
         user: userRole,
       },
     }),
+    organization({
+      sendInvitationEmail: async (data, request) => {
+        await sendOrganizationInviteEmail({
+          invitation: data.invitation,
+          inviter: data.inviter.user,
+          organization: data.organization,
+          email: data.email,
+        });
+      },
+    }),
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+      createCustomerOnSignUp: true,
+      subscription: {
+        authorizeReference: async ({ user, referenceId, action }) => {
+          const memberItem = await db.query.member.findFirst({
+            where: and(
+              eq(member.organizationId, referenceId),
+              eq(member.userId, user.id)
+            ),
+          });
+
+          if (
+            action === "upgrade-subscription" ||
+            action === "cancel-subscription" ||
+            action === "restore-subscription"
+          ) {
+            return memberItem?.role === "owner";
+          }
+
+          return memberItem != null;
+        },
+        enabled: true,
+        plans: STRIPE_PLANS,
+      },
+    }),
   ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
@@ -102,4 +150,24 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (userSession) => {
+          const membership = await db.query.member.findFirst({
+            where: eq(member.userId, userSession.userId),
+            orderBy: desc(member.createdAt),
+            columns: { organizationId: true },
+          });
+
+          return {
+            data: {
+              ...userSession,
+              activeOrganizationId: membership?.organizationId,
+            },
+          };
+        },
+      },
+    },
+  },
 });

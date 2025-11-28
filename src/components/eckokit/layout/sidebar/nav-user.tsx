@@ -19,6 +19,7 @@ import {
 import {
   BadgeCheck,
   BellIcon,
+  Building2Icon,
   CreditCardIcon,
   LogOutIcon,
   Shield,
@@ -113,6 +114,11 @@ export function NavUser() {
                   </Link>
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem asChild>
+                <Link href="/organizations">
+                  <Building2Icon /> Organizations
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />
                 Billing

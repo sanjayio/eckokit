@@ -3,6 +3,7 @@
 import {
   BadgeCheck,
   Bell,
+  Building2Icon,
   CreditCard,
   LogOut,
   Shield,
@@ -27,7 +28,7 @@ import { useEffect, useState } from "react";
 
 export default function UserMenu() {
   const { data: session } = authClient.useSession();
-  const [hasPermission, setHasPermission] = useState(false);
+  const [hasAdminPermission, setHasAdminPermission] = useState(false);
   const router = useRouter();
 
   const handleSignOut = () => {
@@ -40,7 +41,7 @@ export default function UserMenu() {
     authClient.admin
       .hasPermission({ permission: { user: ["list"] } })
       .then((data) => {
-        setHasPermission(data?.data?.success ?? false);
+        setHasAdminPermission(data?.data?.success ?? false);
       });
   }, []);
 
@@ -88,13 +89,18 @@ export default function UserMenu() {
               <BadgeCheck /> Account Settings
             </Link>
           </DropdownMenuItem>
-          {hasPermission && (
+          {hasAdminPermission && (
             <DropdownMenuItem asChild>
               <Link href="/admin-console">
                 <Shield /> Admin Console
               </Link>
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem asChild>
+            <Link href="/organizations">
+              <Building2Icon /> Organizations
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard />
             Billing
