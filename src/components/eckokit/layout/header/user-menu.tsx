@@ -66,9 +66,10 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BadgeCheck />
-            Account
+          <DropdownMenuItem asChild>
+            <Link href="/account-settings">
+              <BadgeCheck /> Account Settings
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard />

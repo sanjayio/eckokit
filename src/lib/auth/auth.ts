@@ -6,8 +6,11 @@ import { sendEmailVerificationEmail } from "../emails/email-verification";
 import { sendPasswordResetEmail } from "../emails/password-reset-email";
 import { sendWelcomeEmail } from "../emails/welcome-email";
 import { createAuthMiddleware } from "better-auth/api";
+import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
+import { twoFactor } from "better-auth/plugins/two-factor";
 
 export const auth = betterAuth({
+  appName: "Eckokit",
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -22,20 +25,25 @@ export const auth = betterAuth({
       await sendEmailVerificationEmail({ user, url });
     },
   },
-  //   socialProviders: {
-  //     github: {
-  //       clientId: process.env.GITHUB_CLIENT_ID!,
-  //       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-  //       enabled: true,
-  //     },
-  //   },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      mapProfileToUser: () => {
+        return {
+          leadSource: "github",
+        };
+      },
+      enabled: true,
+    },
+  },
   session: {
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5, // 5 minutes
     },
   },
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), twoFactor()],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path.startsWith("/sign-up")) {
@@ -51,6 +59,21 @@ export const auth = betterAuth({
     }),
   },
   user: {
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailVerification: async ({ user, url, newEmail }) => {
+        await sendEmailVerificationEmail({
+          user: { ...user, email: newEmail },
+          url,
+        });
+      },
+    },
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        await sendDeleteAccountVerificationEmail({ user, url });
+      },
+    },
     additionalFields: {
       leadSource: {
         type: "string",

@@ -17,6 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
+  BadgeCheck,
   BellIcon,
   CreditCardIcon,
   LogOutIcon,
@@ -25,6 +26,7 @@ import {
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -87,9 +89,11 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <UserCircle2Icon />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="/account-settings">
+                  <BadgeCheck />
+                  Account Settings
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />

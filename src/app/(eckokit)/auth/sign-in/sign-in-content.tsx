@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
+import { Separator } from "@/components/ui/separator";
+import { SocialAuthButtons } from "@/components/eckokit/auth/social-auth-buttons";
 
 const signInSchema = z.object({
   email: z.email().min(1),
@@ -132,6 +134,12 @@ export default function SignInContent() {
               </div>
             </form>
           </Form>
+
+          <Separator />
+
+          <div className="grid grid-cols-1 gap-3">
+            <SocialAuthButtons />
+          </div>
 
           <div className="mt-6">
             <div className="mt-3 text-center text-sm">

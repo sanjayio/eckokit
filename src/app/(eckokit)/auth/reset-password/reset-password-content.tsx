@@ -17,7 +17,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
-import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
 
@@ -31,14 +30,6 @@ export default function ResetPasswordContent() {
   const router = useRouter();
   const token = useSearchParams().get("token");
   const error = useSearchParams().get("error");
-
-  useEffect(() => {
-    authClient.getSession().then((session) => {
-      if (session.data !== null) {
-        router.push("/dashboard");
-      }
-    });
-  }, [router]);
 
   const form = useForm<ResetPasswordForm>({
     resolver: zodResolver(resetPasswordSchema),
