@@ -40,14 +40,15 @@ const emailSettings = {
 } satisfies EmailOptions;
 
 async function checkArcjet(request: Request) {
-  const body = (await request.json()) as unknown;
+  const body = (await request.clone().json()) as unknown;
   const session = await auth.api.getSession({
     headers: request.headers,
   });
 
   const userIdOrIp = (session?.user.id ?? findIp(request)) || "127.0.0.1";
+  const url = new URL(request.url);
 
-  if (request.url.endsWith("/auth/sign-up")) {
+  if (url.pathname.endsWith("/auth/sign-up")) {
     if (
       body &&
       typeof body === "object" &&
@@ -88,7 +89,6 @@ const authHandler = toNextJsHandler(auth);
 export const { GET } = authHandler;
 
 export async function POST(request: Request) {
-  const clonedRequest = request.clone();
   const decision = await checkArcjet(request);
 
   if (decision.isDenied()) {
@@ -136,5 +136,5 @@ export async function POST(request: Request) {
       );
     }
   }
-  return await authHandler.POST(clonedRequest);
+  return await authHandler.POST(request);
 }

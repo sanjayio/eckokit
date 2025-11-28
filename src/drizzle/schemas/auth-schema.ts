@@ -6,6 +6,8 @@ import {
   boolean,
   integer,
   index,
+  unique,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -69,7 +71,13 @@ export const account = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [index("account_userId_idx").on(table.userId)]
+  (table) => [
+    index("account_userId_idx").on(table.userId),
+    unique("account_provider_accountId_unique").on(
+      table.providerId,
+      table.accountId
+    ),
+  ]
 );
 
 export const verification = pgTable(
@@ -122,7 +130,10 @@ export const passkey = pgTable(
   },
   (table) => [
     index("passkey_userId_idx").on(table.userId),
-    index("passkey_credentialID_idx").on(table.credentialID),
+    uniqueIndex("passkey_user_credential_unique").on(
+      table.userId,
+      table.credentialID
+    ),
   ]
 );
 
@@ -151,6 +162,7 @@ export const member = pgTable(
   (table) => [
     index("member_organizationId_idx").on(table.organizationId),
     index("member_userId_idx").on(table.userId),
+    unique("member_org_user_unique").on(table.organizationId, table.userId),
   ]
 );
 

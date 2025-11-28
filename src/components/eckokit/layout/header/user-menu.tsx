@@ -22,9 +22,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { authClient } from "@/lib/auth/auth-client";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function UserMenu() {
   const { data: session } = authClient.useSession();
@@ -32,9 +32,15 @@ export default function UserMenu() {
   const router = useRouter();
 
   const handleSignOut = () => {
-    authClient.signOut().then(() => {
-      router.push("/auth/sign-in");
-    });
+    authClient
+      .signOut()
+      .then(() => {
+        router.push("/auth/sign-in");
+      })
+      .catch((error) => {
+        console.error("Sign out failed:", error);
+        toast.error("Failed to sign out");
+      });
   };
 
   useEffect(() => {
@@ -42,6 +48,10 @@ export default function UserMenu() {
       .hasPermission({ permission: { user: ["list"] } })
       .then((data) => {
         setHasAdminPermission(data?.data?.success ?? false);
+      })
+      .catch((error) => {
+        console.error("Permission check failed:", error);
+        setHasAdminPermission(false);
       });
   }, []);
 
@@ -50,19 +60,19 @@ export default function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarFallback className="rounded-lg">
-            {session?.user?.name?.charAt(0)}
+            {session?.user?.name?.charAt(0) || "?"}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-(--radix-dropdown-menu-trigger-width) min-w-60"
+        className="w-[--radix-dropdown-menu-trigger-width] min-w-60"
         align="end"
       >
         <DropdownMenuLabel className="p-0">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar>
               <AvatarFallback className="rounded-lg">
-                {session?.user?.name?.charAt(0)}
+                {session?.user?.name?.charAt(0) || "?"}
               </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -78,7 +88,7 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/pricing" target="_blank">
+            <Link href="/pricing" target="_blank" rel="noopener noreferrer">
               <Sparkles /> Upgrade
             </Link>
           </DropdownMenuItem>

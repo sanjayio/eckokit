@@ -28,8 +28,9 @@ type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordContent() {
   const router = useRouter();
-  const token = useSearchParams().get("token");
-  const error = useSearchParams().get("error");
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const error = searchParams.get("error");
 
   const form = useForm<ResetPasswordForm>({
     resolver: zodResolver(resetPasswordSchema),
@@ -40,7 +41,7 @@ export default function ResetPasswordContent() {
 
   const { isSubmitting } = form.formState;
 
-  if (token === null || error !== null) {
+  if (!token || error !== null) {
     return (
       <div className="flex pb-8 lg:h-screen lg:pb-0">
         <div className="hidden w-1/2 bg-gray-100 lg:block">
@@ -58,7 +59,7 @@ export default function ResetPasswordContent() {
             <div className="text-center">
               <h2 className="mt-6 text-3xl font-bold">Uh oh!</h2>
               <p className="text-muted-foreground mt-2 text-sm">
-                We&apos;ve receoved an invalid token or it has expired. Please
+                We&apos;ve received an invalid token or it has expired. Please
                 try again.
               </p>
             </div>

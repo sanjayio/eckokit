@@ -1,4 +1,4 @@
-import { sendEmail } from "./send-email"
+import { sendEmail } from "./send-email";
 
 export async function sendOrganizationInviteEmail({
   invitation,
@@ -6,11 +6,17 @@ export async function sendOrganizationInviteEmail({
   organization,
   email,
 }: {
-  invitation: { id: string }
-  inviter: { name: string }
-  organization: { name: string }
-  email: string
+  invitation: { id: string };
+  inviter: { name: string };
+  organization: { name: string };
+  email: string;
 }) {
+  const baseUrl = process.env.BETTER_AUTH_URL;
+  if (!baseUrl) {
+    throw new Error("BETTER_AUTH_URL environment variable is required");
+  }
+  const inviteUrl = `${baseUrl}/organizations/invites/${invitation.id}`;
+
   await sendEmail({
     to: email,
     subject: `You're invited to join the ${organization.name} organization`,
@@ -19,10 +25,10 @@ export async function sendOrganizationInviteEmail({
         <h2 style="color: #333;">You're invited to join ${organization.name}</h2>
         <p>Hello ${inviter.name},</p>
         <p>${inviter.name} invited you to join the ${organization.name} organization. Please click the button below to accept/reject the invitation:</p>
-        <a href="${process.env.BETTER_AUTH_URL}/organizations/invites/${invitation.id}" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">Manage Invitation</a>
-        <p>Best regards,<br>Your App Team</p>
+        <a href="${inviteUrl}" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 16px 0;">Manage Invitation</a>
+        <p>Best regards,<br>Eckokit Team</p>
       </div>
     `,
-    text: `You're invited to join the ${organization.name} organization\n\nHello ${inviter.name},\n\n${inviter.name} invited you to join the ${organization.name} organization. Please click the link below to accept/reject the invitation:\n\n${process.env.BETTER_AUTH_URL}/organizations/invites/${invitation.id}\n\nBest regards,\nYour App Team`,
-  })
+    text: `You're invited to join the ${organization.name} organization\n\nHello ${inviter.name},\n\n${inviter.name} invited you to join the ${organization.name} organization. Please click the link below to accept/reject the invitation:\n\n${inviteUrl}\n\nBest regards,\nEckokit Team`,
+  });
 }

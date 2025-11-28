@@ -1,3 +1,5 @@
+"use client";
+
 import { BellIcon, ClockIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,19 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
 
 const Notifications = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <NotificationsInner />
-    </QueryClientProvider>
-  );
-};
-
-const NotificationsInner = () => {
   const isMobile = useIsMobile();
 
   return (

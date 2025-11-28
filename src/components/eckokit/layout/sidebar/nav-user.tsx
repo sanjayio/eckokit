@@ -23,31 +23,41 @@ import {
   CreditCardIcon,
   LogOutIcon,
   Shield,
-  UserCircle2Icon,
 } from "lucide-react";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = authClient.useSession();
-  const [hasPermission, setHasPermission] = useState(false);
+  const [hasAdminPermission, setHasAdminPermission] = useState(false);
   const router = useRouter();
 
   const handleSignOut = () => {
-    authClient.signOut().then(() => {
-      router.push("/auth/sign-in");
-    });
+    authClient
+      .signOut()
+      .then(() => {
+        router.push("/auth/sign-in");
+      })
+      .catch((error) => {
+        console.error("Sign out failed:", error);
+        toast.error("Failed to sign out");
+      });
   };
 
   useEffect(() => {
     authClient.admin
       .hasPermission({ permission: { user: ["list"] } })
       .then((data) => {
-        setHasPermission(data?.data?.success ?? false);
+        setHasAdminPermission(data?.data?.success ?? false);
+      })
+      .catch((error) => {
+        console.error("Permission check failed:", error);
+        setHasAdminPermission(false);
       });
   }, []);
 
@@ -62,7 +72,7 @@ export function NavUser() {
             >
               <Avatar className="rounded-full">
                 <AvatarFallback className="rounded-lg">
-                  {session?.user?.name?.charAt(0)}
+                  {session?.user?.name?.charAt(0) || "?"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -77,7 +87,7 @@ export function NavUser() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -86,7 +96,7 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarFallback className="rounded-lg">
-                    {session?.user?.name?.charAt(0)}
+                    {session?.user?.name?.charAt(0) || "?"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -107,7 +117,7 @@ export function NavUser() {
                   Account Settings
                 </Link>
               </DropdownMenuItem>
-              {hasPermission && (
+              {hasAdminPermission && (
                 <DropdownMenuItem asChild>
                   <Link href="/admin-console">
                     <Shield /> Admin Console

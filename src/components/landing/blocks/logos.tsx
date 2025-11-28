@@ -109,8 +109,8 @@ export const Logos = () => {
         {/* </div> */}
       </div>
     </section>
-  )
-}
+  );
+};
 
 // type LogoRowProps = {
 //   companies: Company[];
@@ -130,7 +130,7 @@ export const Logos = () => {
 //           )}
 //         >
 //           {companies.map((company, index) => (
-//             <Link href={company.href} target="_blank" key={index}>
+//             <Link href={company.href} target="_blank" rel="noopener noreferrer" key={index}>
 //               <Image
 //                 src={company.logo}
 //                 alt={`${company.name} logo`}
@@ -150,6 +150,7 @@ export const Logos = () => {
 //             <Link
 //               href={company.href}
 //               target="_blank"
+//               rel="noopener noreferrer"
 //               key={index}
 //               className="mx-8 inline-block transition-opacity hover:opacity-70"
 //             >

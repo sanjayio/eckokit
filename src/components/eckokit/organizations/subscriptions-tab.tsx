@@ -115,7 +115,7 @@ export function SubscriptionsTab() {
                   {activeSubscription.priceId && (
                     <Badge variant="secondary">
                       {currencyFormatter.format(
-                        PLAN_TO_PRICE[activeSubscription.plan]
+                        PLAN_TO_PRICE[activeSubscription.plan] ?? 0
                       )}
                     </Badge>
                   )}

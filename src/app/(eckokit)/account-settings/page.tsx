@@ -56,7 +56,7 @@ export default async function Profile() {
             {session.user.name !== null ? (
               <Avatar>
                 <AvatarFallback className="rounded-lg">
-                  {session?.user?.name?.charAt(0)}
+                  {session?.user?.name?.charAt(0) || "?"}
                 </AvatarFallback>
               </Avatar>
             ) : (

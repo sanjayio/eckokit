@@ -19,19 +19,29 @@ import { redirect } from "next/navigation";
 import { UserRow } from "@/components/eckokit/admin-console/user-row";
 
 export default async function Dashboard() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const headersList = await headers();
 
-  if (session == null) return redirect("/auth/login");
-  const hasAccess = await auth.api.userHasPermission({
-    headers: await headers(),
-    body: { permission: { user: ["list"] } },
-  });
-  if (!hasAccess.success) return redirect("/");
+  let session;
+  let users;
 
-  const users = await auth.api.listUsers({
-    headers: await headers(),
-    query: { limit: 100, sortBy: "createdAt", sortDirection: "desc" },
-  });
+  try {
+    session = await auth.api.getSession({ headers: headersList });
+
+    if (session == null) return redirect("/auth/sign-in");
+    const hasAccess = await auth.api.userHasPermission({
+      headers: headersList,
+      body: { permission: { user: ["list"] } },
+    });
+    if (!hasAccess.success) return redirect("/dashboard");
+
+    users = await auth.api.listUsers({
+      headers: headersList,
+      query: { limit: 100, sortBy: "createdAt", sortDirection: "desc" },
+    });
+  } catch (error) {
+    console.error("Error in admin console:", error);
+    return redirect("/auth/sign-in");
+  }
 
   return (
     <div className="max-w-2xl container my-4 px-4">

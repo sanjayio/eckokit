@@ -10,15 +10,19 @@ export function PasskeyButton() {
   const { refetch } = authClient.useSession();
 
   useEffect(() => {
-    authClient.signIn.passkey(
-      { autoFill: true },
-      {
-        onSuccess() {
-          refetch();
-          router.push("/dashboard");
-        },
-      }
-    );
+    authClient.signIn
+      .passkey(
+        { autoFill: true },
+        {
+          onSuccess() {
+            refetch();
+            router.push("/dashboard");
+          },
+        }
+      )
+      .catch(() => {
+        // Silently ignore auto-fill failures (user may not have passkeys)
+      });
   }, [router, refetch]);
 
   return (

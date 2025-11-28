@@ -21,6 +21,7 @@ export default function VerifyEmailContent() {
 
   if (!toBeVerifiedEmail) {
     router.push("/");
+    return null;
   }
 
   return (

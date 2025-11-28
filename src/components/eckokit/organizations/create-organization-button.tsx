@@ -48,18 +48,30 @@ export function CreateOrganizationButton() {
     const slug = data.name
       .trim()
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-");
-    const res = await authClient.organization.create({
-      name: data.name,
-      slug,
-    });
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
 
-    if (res.error) {
-      toast.error(res.error.message || "Failed to create organization");
-    } else {
+    if (!slug || slug.length === 0) {
+      toast.error("Organization name must contain letters or numbers");
+      return;
+    }
+
+    try {
+      const res = await authClient.organization.create({
+        name: data.name.trim(),
+        slug,
+      });
+
+      if (res.error) {
+        toast.error(res.error.message || "Failed to create organization");
+        return;
+      }
+
       form.reset();
       setOpen(false);
       await authClient.organization.setActive({ organizationId: res.data.id });
+    } catch {
+      toast.error("Something went wrong while creating the organization");
     }
   }
 

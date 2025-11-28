@@ -98,7 +98,8 @@ export const auth = betterAuth({
           if (
             action === "upgrade-subscription" ||
             action === "cancel-subscription" ||
-            action === "restore-subscription"
+            action === "restore-subscription" ||
+            action === "billing-portal"
           ) {
             return memberItem?.role === "owner";
           }

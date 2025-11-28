@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import { UserX } from "lucide-react";
 import { AuthActionButton } from "@/components/eckokit/auth/auth-action-button";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function ImpersonationIndicator() {
   const router = useRouter();
@@ -16,6 +17,10 @@ export function ImpersonationIndicator() {
       <AuthActionButton
         action={() =>
           authClient.admin.stopImpersonating(undefined, {
+            onError: (error) => {
+              console.error("Failed to stop impersonating:", error);
+              toast.error("Failed to stop impersonating");
+            },
             onSuccess: () => {
               router.push("/admin-console");
               refetch();

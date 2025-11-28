@@ -57,7 +57,10 @@ export default function SignInContent() {
       {
         onError: (error) => {
           if (error.error.code === "EMAIL_NOT_VERIFIED") {
-            router.push(`/auth/verify-email?email=${data.email}`);
+            router.push(
+              `/auth/verify-email?email=${encodeURIComponent(data.email)}`
+            );
+            return;
           }
           toast.error(error.error.message || "Failed to sign in");
         },

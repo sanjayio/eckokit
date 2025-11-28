@@ -47,14 +47,6 @@ export function ActiveThemeProvider({
     setThemeCookie("theme_radius", theme.radius);
     body.setAttribute("data-theme-radius", theme.radius);
 
-    if (theme.radius != "default") {
-      setThemeCookie("theme_preset", theme.radius);
-      body.setAttribute("data-theme-radius", theme.radius);
-    } else {
-      setThemeCookie("theme_preset", null);
-      body.removeAttribute("data-theme-radius");
-    }
-
     if (theme.preset != "default") {
       setThemeCookie("theme_preset", theme.preset);
       body.setAttribute("data-theme-preset", theme.preset);

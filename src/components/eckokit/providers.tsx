@@ -6,18 +6,16 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { ActiveThemeProvider } from "@/components/eckokit/active-theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeType } from "@/lib/themes";
+import { useState } from "react";
 
 interface ProvidersProps {
-  themeSettings: {
-    preset: any;
-    scale: any;
-    radius: any;
-  };
+  themeSettings: ThemeType;
   children: React.ReactNode;
 }
 
 const Providers = ({ children, themeSettings }: ProvidersProps) => {
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <ThemeProvider
