@@ -9,6 +9,12 @@ import { createAuthMiddleware } from "better-auth/api";
 import { sendDeleteAccountVerificationEmail } from "../emails/delete-account-verification";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { passkey } from "@better-auth/passkey";
+import {
+  ac,
+  admin as adminRole,
+  user as userRole,
+} from "@/components/eckokit/auth/permissions";
+import { admin } from "better-auth/plugins/admin";
 
 export const auth = betterAuth({
   appName: "Eckokit",
@@ -44,7 +50,18 @@ export const auth = betterAuth({
       maxAge: 60 * 5, // 5 minutes
     },
   },
-  plugins: [nextCookies(), twoFactor(), passkey()],
+  plugins: [
+    nextCookies(),
+    twoFactor(),
+    passkey(),
+    admin({
+      ac,
+      roles: {
+        admin: adminRole,
+        user: userRole,
+      },
+    }),
+  ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path.startsWith("/sign-up")) {

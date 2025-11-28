@@ -1,6 +1,13 @@
 "use client";
 
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
+import {
+  BadgeCheck,
+  Bell,
+  CreditCard,
+  LogOut,
+  Shield,
+  Sparkles,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -16,9 +23,11 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth/auth-client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function UserMenu() {
   const { data: session } = authClient.useSession();
+  const [hasPermission, setHasPermission] = useState(false);
   const router = useRouter();
 
   const handleSignOut = () => {
@@ -26,6 +35,14 @@ export default function UserMenu() {
       router.push("/auth/sign-in");
     });
   };
+
+  useEffect(() => {
+    authClient.admin
+      .hasPermission({ permission: { user: ["list"] } })
+      .then((data) => {
+        setHasPermission(data?.data?.success ?? false);
+      });
+  }, []);
 
   return (
     <DropdownMenu>
@@ -71,6 +88,13 @@ export default function UserMenu() {
               <BadgeCheck /> Account Settings
             </Link>
           </DropdownMenuItem>
+          {hasPermission && (
+            <DropdownMenuItem asChild>
+              <Link href="/admin-console">
+                <Shield /> Admin Console
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem>
             <CreditCard />
             Billing

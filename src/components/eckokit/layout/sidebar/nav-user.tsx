@@ -21,16 +21,19 @@ import {
   BellIcon,
   CreditCardIcon,
   LogOutIcon,
+  Shield,
   UserCircle2Icon,
 } from "lucide-react";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = authClient.useSession();
+  const [hasPermission, setHasPermission] = useState(false);
   const router = useRouter();
 
   const handleSignOut = () => {
@@ -38,6 +41,14 @@ export function NavUser() {
       router.push("/auth/sign-in");
     });
   };
+
+  useEffect(() => {
+    authClient.admin
+      .hasPermission({ permission: { user: ["list"] } })
+      .then((data) => {
+        setHasPermission(data?.data?.success ?? false);
+      });
+  }, []);
 
   return (
     <SidebarMenu>
@@ -95,6 +106,13 @@ export function NavUser() {
                   Account Settings
                 </Link>
               </DropdownMenuItem>
+              {hasPermission && (
+                <DropdownMenuItem asChild>
+                  <Link href="/admin-console">
+                    <Shield /> Admin Console
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem>
                 <CreditCardIcon />
                 Billing

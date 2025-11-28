@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/eckokit/layout/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/eckokit/layout/header";
+import { ImpersonationIndicator } from "@/components/eckokit/auth/impersonation-indicator";
 
 export default async function AuthLayout({
   children,
@@ -31,6 +32,7 @@ export default async function AuthLayout({
         <div className="flex flex-1 flex-col">
           <div className="@container/main p-4 xl:group-data-[theme-content-layout=centered]/layout:container xl:group-data-[theme-content-layout=centered]/layout:mx-auto">
             {children}
+            <ImpersonationIndicator />
           </div>
         </div>
       </SidebarInset>

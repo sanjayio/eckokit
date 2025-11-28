@@ -12,7 +12,7 @@ export async function sendEmail({
   text: string;
 }) {
   await resend.emails.send({
-    from: "Eckokit <onboarding@resend.dev>", // You could add your custom domain
+    from: "Eckokit Notifications <notifications@notifications.eckokit.com>", // You could add your custom domain
     to: to, // email of the user to want to end
     subject: subject, // Main subject of the email
     html: html, // Content of the email
