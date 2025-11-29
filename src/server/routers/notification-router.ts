@@ -23,6 +23,7 @@ export const notificationRouter = router({
           message,
           userId: user.id,
           createdAt: new Date(),
+          updatedAt: new Date(),
         })
         .returning();
 
@@ -76,13 +77,13 @@ export const notificationRouter = router({
         )
         .limit(1);
 
-      if (!dbNotification) {
+      if (dbNotification.length === 0) {
         throw new Error("Notification not found");
       }
 
       try {
         // Update notification in database
-        const dbNotification = await ctx.db
+        const updatedNotification = await ctx.db
           .update(notification)
           .set({
             read: true,
@@ -96,7 +97,7 @@ export const notificationRouter = router({
           )
           .returning();
 
-        return c.json({ notification: dbNotification[0] });
+        return c.json({ notification: updatedNotification[0] });
       } catch (error) {
         console.error("Error updating notification", error);
         throw new Error(

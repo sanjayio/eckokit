@@ -12,8 +12,9 @@ export const notification = pgTable("notification", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
+    .defaultNow()
     .$onUpdate(() => sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });

@@ -24,7 +24,7 @@ export const useCreateNotification = () => {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Error creating organization"
+        error instanceof Error ? error.message : "Error creating notification"
       );
     },
   });

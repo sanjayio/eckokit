@@ -8,12 +8,19 @@ import { user } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
 
+// Create pool once at module level
+let pool: Pool | null = null;
+const getPool = (connectionString: string) => {
+  if (!pool) {
+    pool = new Pool({ connectionString });
+  }
+  return pool;
+};
+
 const extendedDatabaseMiddleware = j.middleware(async ({ c, next }) => {
   const variables = env(c);
 
-  const pool = new Pool({
-    connectionString: variables.DATABASE_URL,
-  });
+  const pool = getPool(variables.DATABASE_URL);
 
   const db = drizzle(pool, { schema });
 
