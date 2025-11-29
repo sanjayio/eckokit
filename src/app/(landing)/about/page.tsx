@@ -1,8 +1,8 @@
-import { Background } from '@/components/public/background'
-import About from '@/components/public/blocks/about'
-import { AboutHero } from '@/components/public/blocks/about-hero'
-import { Investors } from '@/components/public/blocks/investors'
-import { DashedLine } from '@/components/public/dashed-line'
+import { Background } from "@/components/landing/background";
+import About from "@/components/landing/blocks/about";
+import { AboutHero } from "@/components/landing/blocks/about-hero";
+import { Investors } from "@/components/landing/blocks/investors";
+import { DashedLine } from "@/components/landing/dashed-line";
 
 export default function AboutPage() {
   return (
@@ -17,5 +17,5 @@ export default function AboutPage() {
         </div>
       </div>
     </Background>
-  )
+  );
 }

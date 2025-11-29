@@ -1,13 +1,13 @@
-import { Background } from '@/components/public/background'
-import { FAQ } from '@/components/public/blocks/faq'
-import { Features } from '@/components/public/blocks/features'
-import { Hero } from '@/components/public/blocks/hero'
-import { Logos } from '@/components/public/blocks/logos'
-import { Pricing } from '@/components/public/blocks/pricing'
-import { ResourceAllocation } from '@/components/public/blocks/resource-allocation'
-import { Testimonials } from '@/components/public/blocks/testimonials'
+import { Background } from "@/components/landing/background";
+import { FAQ } from "@/components/landing/blocks/faq";
+import { Features } from "@/components/landing/blocks/features";
+import { Hero } from "@/components/landing/blocks/hero";
+import { Logos } from "@/components/landing/blocks/logos";
+import { Pricing } from "@/components/landing/blocks/pricing";
+import { ResourceAllocation } from "@/components/landing/blocks/resource-allocation";
+import { Testimonials } from "@/components/landing/blocks/testimonials";
 
-export default function Home() {
+export default function Page() {
   return (
     <>
       <Background className="via-muted to-muted/80">
@@ -22,5 +22,5 @@ export default function Home() {
         <FAQ />
       </Background>
     </>
-  )
+  );
 }

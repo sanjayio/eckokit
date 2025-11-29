@@ -1,0 +1,45 @@
+"use client";
+
+import { Label } from "@/components/ui/label";
+import { useThemeConfig } from "@/components/eckokit/active-theme";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { BanIcon } from "lucide-react";
+
+type ScaleValue = "none";
+
+export function ThemeScaleSelector() {
+  const { theme, setTheme } = useThemeConfig();
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Label htmlFor="roundedCorner">Scale:</Label>
+      <div>
+        <ToggleGroup
+          value={theme.scale}
+          type="single"
+          onValueChange={(value: ScaleValue) =>
+            setTheme({ ...theme, scale: value })
+          }
+        >
+          <ToggleGroupItem variant="outline" value="none">
+            <BanIcon />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            variant="outline"
+            value="sm"
+            className="text-xs data-[variant=outline]:border-l-1"
+          >
+            XS
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            variant="outline"
+            value="lg"
+            className="text-xs data-[variant=outline]:border-l-1"
+          >
+            LG
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+    </div>
+  );
+}

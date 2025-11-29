@@ -1,0 +1,248 @@
+import { AccountDeletion } from "@/components/eckokit/account-settings/account-deletion";
+import { AccountLinking } from "@/components/eckokit/account-settings/account-linking";
+import { ChangePasswordForm } from "@/components/eckokit/account-settings/change-password-form";
+import { PasskeyManagement } from "@/components/eckokit/account-settings/passkey-management";
+import { ProfileUpdateForm } from "@/components/eckokit/account-settings/profile-update-form";
+import { SessionManagement } from "@/components/eckokit/account-settings/session-management";
+import { SetPasswordButton } from "@/components/eckokit/account-settings/set-password-button";
+import { TwoFactorAuth } from "@/components/eckokit/account-settings/two-factor-auth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { auth } from "@/lib/auth/auth";
+import {
+  ArrowLeft,
+  Key,
+  LinkIcon,
+  Loader2Icon,
+  Shield,
+  Trash2,
+  User,
+} from "lucide-react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { ReactNode, Suspense } from "react";
+
+function LoadingSuspense({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<Loader2Icon className="size-20 animate-spin" />}>
+      {children}
+    </Suspense>
+  );
+}
+
+export default async function Profile() {
+  const headersList = await headers();
+  const session = await auth.api.getSession({
+    headers: headersList,
+  });
+
+  if (!session || session === null) {
+    redirect("/auth/sign-in");
+  }
+
+  return (
+    <div className="max-w-2xl my-2 px-2">
+      <div className="mb-8">
+        <div className="flex items-center space-x-4">
+          <div className="size-16 bg-muted rounded-full flex items-center justify-center overflow-hidden">
+            {session.user.name !== null ? (
+              <Avatar>
+                <AvatarFallback className="rounded-lg">
+                  {session?.user?.name?.charAt(0) || "?"}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <User className="size-8 text-muted-foreground" />
+            )}
+          </div>
+          <div className="flex-1">
+            <div className="flex gap-1 justify-between items-start">
+              <h1 className="text-3xl font-bold">
+                {session.user.name || "User Profile"}
+              </h1>
+              <Badge>{session.user.role}</Badge>
+            </div>
+            <p className="text-muted-foreground">{session.user.email}</p>
+          </div>
+        </div>
+      </div>
+      <Tabs className="space-y-2" defaultValue="profile">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="profile">
+            <User />
+            <span className="max-sm:hidden">Profile</span>
+          </TabsTrigger>
+          <TabsTrigger value="security">
+            <Shield />
+            <span className="max-sm:hidden">Security</span>
+          </TabsTrigger>
+          <TabsTrigger value="sessions">
+            <Key />
+            <span className="max-sm:hidden">Sessions</span>
+          </TabsTrigger>
+          <TabsTrigger value="accounts">
+            <LinkIcon />
+            <span className="max-sm:hidden">Accounts</span>
+          </TabsTrigger>
+          <TabsTrigger value="danger">
+            <Trash2 />
+            <span className="max-sm:hidden">Danger</span>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="profile">
+          <Card>
+            <CardContent>
+              <ProfileUpdateForm user={session.user} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="security">
+          <LoadingSuspense>
+            <SecurityTab
+              email={session.user.email}
+              isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
+            />
+          </LoadingSuspense>
+        </TabsContent>
+
+        <TabsContent value="sessions">
+          <LoadingSuspense>
+            <SessionsTab currentSessionToken={session.session.token} />
+          </LoadingSuspense>
+        </TabsContent>
+
+        <TabsContent value="accounts">
+          <LoadingSuspense>
+            <LinkedAccountsTab />
+          </LoadingSuspense>
+        </TabsContent>
+
+        <TabsContent value="danger">
+          <Card className="border border-destructive">
+            <CardHeader>
+              <CardTitle className="text-destructive">Danger Zone</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <AccountDeletion />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+async function LinkedAccountsTab() {
+  const accounts = await auth.api.listUserAccounts({
+    headers: await headers(),
+  });
+  const nonCredentialAccounts = accounts.filter(
+    (a) => a.providerId !== "credential"
+  );
+
+  return (
+    <Card>
+      <CardContent>
+        <AccountLinking currentAccounts={nonCredentialAccounts} />
+      </CardContent>
+    </Card>
+  );
+}
+
+async function SecurityTab({
+  email,
+  isTwoFactorEnabled,
+}: {
+  email: string;
+  isTwoFactorEnabled: boolean;
+}) {
+  const [passkeys, accounts] = await Promise.all([
+    auth.api.listPasskeys({ headers: await headers() }),
+    auth.api.listUserAccounts({ headers: await headers() }),
+  ]);
+
+  const hasPasswordAccount = accounts.some(
+    (a) => a.providerId === "credential"
+  );
+
+  return (
+    <div className="space-y-6">
+      {hasPasswordAccount ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Change Password</CardTitle>
+            <CardDescription>
+              Update your password for improved security.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChangePasswordForm />
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Set Password</CardTitle>
+            <CardDescription>
+              We will send you a password reset email to set up a password.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SetPasswordButton email={email} />
+          </CardContent>
+        </Card>
+      )}
+      {hasPasswordAccount && (
+        <Card>
+          <CardHeader className="flex items-center justify-between gap-2">
+            <CardTitle>Two-Factor Authentication</CardTitle>
+            <Badge variant={isTwoFactorEnabled ? "default" : "secondary"}>
+              {isTwoFactorEnabled ? "Enabled" : "Disabled"}
+            </Badge>
+          </CardHeader>
+          <CardContent>
+            <TwoFactorAuth isEnabled={isTwoFactorEnabled} />
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Passkeys</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PasskeyManagement passkeys={passkeys} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+async function SessionsTab({
+  currentSessionToken,
+}: {
+  currentSessionToken: string;
+}) {
+  const sessions = await auth.api.listSessions({ headers: await headers() });
+
+  return (
+    <Card>
+      <CardContent>
+        <SessionManagement
+          sessions={sessions}
+          currentSessionToken={currentSessionToken}
+        />
+      </CardContent>
+    </Card>
+  );
+}

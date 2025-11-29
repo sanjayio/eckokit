@@ -1,7 +1,7 @@
-import { Footer } from "@/components/public/blocks/footer";
-import { Navbar } from "@/components/public/blocks/navbar";
-import { StyleGlideProvider } from "@/components/public/styleglide-provider";
-import { ThemeProvider } from "@/components/public/theme-provider";
+import { Footer } from "@/components/landing/blocks/footer";
+import { Navbar } from "@/components/landing/blocks/navbar";
+import { StyleGlideProvider } from "@/components/landing/styleglide-provider";
+import { ThemeProvider } from "@/components/landing/theme-provider";
 import "./globals.css";
 
 export default function RootLayout({
