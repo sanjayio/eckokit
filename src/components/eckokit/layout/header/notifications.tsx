@@ -20,13 +20,15 @@ const Notifications = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost" className="relative">
-          <>
-            <BellIcon className="animate-tada" />
-            <span className="bg-destructive absolute end-0 top-0 block size-2 shrink-0 rounded-full">
-              1
-            </span>
-          </>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="relative"
+          aria-label="Open notifications"
+        >
+          <BellIcon className="animate-tada" aria-hidden="true" />
+          <span className="bg-destructive absolute end-0 top-0 block size-2 shrink-0 rounded-full" />
+          <span className="sr-only">1 new notification</span>
         </Button>
       </DropdownMenuTrigger>
 
@@ -59,10 +61,10 @@ const Notifications = () => {
                   Amet minim mollit non deser unt ullamco est sit aliqua.
                 </div>
                 <div className="dark:group-hover:text-default-500 text-muted-foreground flex items-center gap-1 text-xs">
-                  <ClockIcon className="size-3!" />2 days ago
+                  <ClockIcon className="size-3" />2 days ago
                 </div>
                 <div className="dark:group-hover:text-default-500 text-muted-foreground flex items-center gap-1 text-xs text-end justify-end cursor-pointer">
-                  <TrashIcon className="size-3!" />
+                  <TrashIcon className="size-3" />
                   Click to dismiss
                 </div>
               </div>

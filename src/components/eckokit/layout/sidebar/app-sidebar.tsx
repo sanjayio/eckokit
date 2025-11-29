@@ -30,6 +30,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { authClient } from "@/lib/auth/auth-client";
+import { toast } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,25 @@ export function AppSidebarInner({
   const pathname = usePathname();
   const { setOpen, setOpenMobile, isMobile } = useSidebar();
   const isTablet = useIsTablet();
+  const { data: organizations } = authClient.useListOrganizations();
+  const { data: activeOrganization } = authClient.useActiveOrganization();
+
+  function setActiveOrganization(
+    organizationId: string,
+    organizationName: string
+  ) {
+    authClient.organization.setActive(
+      { organizationId },
+      {
+        onSuccess: () => {
+          toast.success("Switched to organization " + organizationName);
+        },
+        onError: (error) => {
+          toast.error(error.error.message || "Failed to switch organization");
+        },
+      }
+    );
+  }
 
   useEffect(() => {
     if (isMobile) setOpenMobile(false);
@@ -68,7 +89,9 @@ export function AppSidebarInner({
                     <span className="font-regular text-xs text-muted-foreground">
                       Currently viewing as
                     </span>
-                    <span className="font-semibold">Personal</span>
+                    <span className="font-semibold">
+                      {activeOrganization?.name ?? "Personal"}
+                    </span>
                   </div>
                   <ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
@@ -92,20 +115,47 @@ export function AppSidebarInner({
                         </span>
                       </div>
                     </div>
-                    <Check className="text-muted-foreground size-4" />
+                    {pathname === "/dashboard" && (
+                      <Check className="text-muted-foreground size-4" />
+                    )}
                   </DropdownMenuItem>
                 </Link>
-                <Link href={`/organizations`}>
-                  <DropdownMenuItem className="flex items-center gap-3">
-                    <Building className="text-muted-foreground size-4" />
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">Organizations</span>
-                    </div>
-                    <Check className="text-muted-foreground size-4" />
-                  </DropdownMenuItem>
-                </Link>
+                {activeOrganization && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Organizations</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {organizations?.map((organization) => (
+                      <DropdownMenuItem
+                        className="cursor-pointer flex flex-row items-center gap-3 justify-between"
+                        key={organization.id}
+                        onClick={() =>
+                          setActiveOrganization(
+                            organization.id,
+                            organization.name
+                          )
+                        }
+                      >
+                        <div className="flex flex-row items-center gap-3">
+                          <Building className="text-muted-foreground size-4" />
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">
+                              <span className="text-sm font-medium">
+                                {organization.name}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        {activeOrganization.id === organization.id && (
+                          <Check className="text-muted-foreground size-4" />
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                )}
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/organizations/new">
+                  <Link href="/organizations">
                     <PlusIcon />
                     New Organization
                   </Link>

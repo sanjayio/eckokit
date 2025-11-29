@@ -19,7 +19,6 @@ export function ImpersonationIndicator() {
           authClient.admin.stopImpersonating(undefined, {
             onError: (error) => {
               console.error("Failed to stop impersonating:", error);
-              toast.error("Failed to stop impersonating");
             },
             onSuccess: () => {
               router.push("/admin-console");

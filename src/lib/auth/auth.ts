@@ -23,7 +23,11 @@ import { stripe } from "@better-auth/stripe";
 import Stripe from "stripe";
 import { STRIPE_PLANS } from "@/lib/auth/stripe";
 
-const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripeApiKey = process.env.STRIPE_SECRET_KEY;
+if (!stripeApiKey) {
+  throw new Error("STRIPE_SECRET_KEY is not set");
+}
+const stripeClient = new Stripe(stripeApiKey, {
   apiVersion: "2025-11-17.clover",
 });
 

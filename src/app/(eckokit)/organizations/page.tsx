@@ -1,5 +1,3 @@
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -13,9 +11,9 @@ export default async function OrganizationsPage() {
 
   return (
     <div className="container mx-auto my-6 px-4">
-      <div className="flex items-center mb-8 gap-2 max-w-2xl">
-        <OrganizationSelect />
+      <div className="flex flex-col items-end justify-end mb-8 gap-4 max-w-2xl">
         <CreateOrganizationButton />
+        <OrganizationSelect />
       </div>
 
       <OrganizationTabs />

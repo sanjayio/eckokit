@@ -1,11 +1,7 @@
 import { StripePlan } from "@better-auth/stripe";
 
-const STRIPE_STARTER_PRICE_ID = process.env.STRIPE_STARTER_PRICE_ID;
-const STRIPE_PRO_PRICE_ID = process.env.STRIPE_PRO_PRICE_ID;
-
-if (!STRIPE_STARTER_PRICE_ID || !STRIPE_PRO_PRICE_ID) {
-  throw new Error("Missing required Stripe price ID environment variables");
-}
+const STRIPE_STARTER_PRICE_ID = process.env.STRIPE_STARTER_PRICE_ID!;
+const STRIPE_PRO_PRICE_ID = process.env.STRIPE_PRO_PRICE_ID!;
 
 export const STRIPE_PLANS = [
   {
@@ -25,6 +21,6 @@ export const STRIPE_PLANS = [
 ] as const satisfies StripePlan[];
 
 export const PLAN_TO_PRICE: Record<string, number> = {
-  basic: 149,
+  starter: 149,
   pro: 399,
 };

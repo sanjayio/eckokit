@@ -132,7 +132,7 @@ export const Pricing = ({ className }: { className?: string }) => {
 
                 <Button
                   className="w-fit"
-                  variant={plan.name === "Starter" ? "default" : "outline"}
+                  variant={plan.name === "Pro" ? "default" : "outline"}
                   asChild
                 >
                   <Link href="/book-a-demo">Book a demo</Link>
