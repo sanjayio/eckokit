@@ -1,11 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { useEffect } from "react";
-import { Building, Check, ChevronsUpDown, UserCircle2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Building,
+  Check,
+  ChevronsUpDown,
+  UserCircle2Icon,
+  ArrowLeftRight,
+} from "lucide-react";
 import { PlusIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useIsTablet } from "@/hooks/use-mobile";
 import Link from "next/link";
 
 import {
@@ -33,9 +38,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 
-const queryClient = new QueryClient();
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
       <AppSidebarInner {...props} />
@@ -47,8 +51,7 @@ export function AppSidebarInner({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  const { setOpen, setOpenMobile, isMobile } = useSidebar();
-  const isTablet = useIsTablet();
+  const { setOpenMobile, isMobile } = useSidebar();
   const { data: organizations } = authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
 
@@ -73,10 +76,6 @@ export function AppSidebarInner({
     if (isMobile) setOpenMobile(false);
   }, [isMobile, setOpenMobile, pathname]);
 
-  useEffect(() => {
-    setOpen(!isTablet);
-  }, [isTablet, setOpen]);
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -85,7 +84,7 @@ export function AppSidebarInner({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="hover:text-foreground h-10 group-data-[collapsible=icon]:px-0! hover:bg-[var(--primary)]/5">
-                  <div className="flex flex-col items-start justify-start">
+                  <div className="flex flex-col items-start justify-start group-data-[collapsible=icon]:hidden">
                     <span className="font-regular text-xs text-muted-foreground">
                       Currently viewing as
                     </span>
@@ -93,6 +92,7 @@ export function AppSidebarInner({
                       {activeOrganization?.name ?? "Personal"}
                     </span>
                   </div>
+                  <ArrowLeftRight className="hidden group-data-[collapsible=icon]:block size-4 mx-auto" />
                   <ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

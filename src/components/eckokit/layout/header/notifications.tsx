@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, ClockIcon, TrashIcon } from "lucide-react";
+import { BellIcon, ClockIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -13,9 +13,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import {
+  useCreateNotification,
+  useGetNotificationsByUserId,
+  useMarkAllNotificationsAsRead,
+  useMarkNotificationAsReadById,
+} from "@/hooks/use-notification";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 
 const Notifications = () => {
   const isMobile = useIsMobile();
+  const { mutate: createNotification } = useCreateNotification();
+  const { mutate: markAllNotificationsAsRead } =
+    useMarkAllNotificationsAsRead();
+  const { mutate: markNotificationAsReadById } =
+    useMarkNotificationAsReadById();
+  const { data: notifications } = useGetNotificationsByUserId();
 
   return (
     <DropdownMenu>
@@ -37,39 +50,52 @@ const Notifications = () => {
         className="ms-4 w-80 p-0"
       >
         <DropdownMenuLabel className="bg-background dark:bg-muted sticky top-0 z-10 p-0">
-          <div className="flex justify-between border-b px-6 py-4">
+          <div className="flex items-center justify-between border-b px-4 py-4">
             <div className="font-medium">Notifications</div>
             <Button
-              variant="link"
-              className="h-auto p-0 text-xs"
-              size="sm"
-              asChild
+              variant="destructive"
+              size="icon"
+              onClick={() => markAllNotificationsAsRead()}
             >
-              <Link href="#">View all</Link>
+              <TrashIcon className="size-4" />
             </Button>
           </div>
         </DropdownMenuLabel>
 
         <ScrollArea className="h-[350px]">
-          <DropdownMenuItem className="group flex cursor-pointer items-start gap-9 rounded-none border-b px-4 py-3">
+          {notifications?.notifications.map((notification) => (
+            <DropdownMenuItem
+              key={notification.id}
+              className="group flex cursor-pointer items-start gap-9 rounded-none border-b px-4 py-3"
+            >
+              <div className="flex flex-1 items-start gap-2">
+                <div className="flex flex-1 flex-col gap-1">
+                  <div className="dark:group-hover:text-default-800 truncate text-sm font-medium">
+                    {notification.title}
+                  </div>
+                  <div className="dark:group-hover:text-default-700 text-muted-foreground line-clamp-1 text-xs">
+                    {notification.message}
+                  </div>
+                  <div className="dark:group-hover:text-default-500 text-muted-foreground flex items-center gap-1 text-xs">
+                    <ClockIcon className="size-3" />
+                    {formatDistanceToNow(new Date(notification.createdAt))}
+                  </div>
+                </div>
+              </div>
+            </DropdownMenuItem>
+          ))}
+          {notifications?.notifications.length !== 0 && (
             <div className="flex flex-1 items-start gap-2">
               <div className="flex flex-1 flex-col gap-1">
-                <div className="dark:group-hover:text-default-800 truncate text-sm font-medium">
-                  Your order is placed
-                </div>
-                <div className="dark:group-hover:text-default-700 text-muted-foreground line-clamp-1 text-xs">
-                  Amet minim mollit non deser unt ullamco est sit aliqua.
-                </div>
-                <div className="dark:group-hover:text-default-500 text-muted-foreground flex items-center gap-1 text-xs">
-                  <ClockIcon className="size-3" />2 days ago
-                </div>
-                <div className="dark:group-hover:text-default-500 text-muted-foreground flex items-center gap-1 text-xs text-end justify-end cursor-pointer">
-                  <TrashIcon className="size-3" />
-                  Click to dismiss
+                <div
+                  className="dark:group-hover:text-default-800 bg-muted text-center py-4 truncate text-sm font-medium cursor-pointer"
+                  onClick={() => markAllNotificationsAsRead()}
+                >
+                  Load more
                 </div>
               </div>
             </div>
-          </DropdownMenuItem>
+          )}
         </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>
