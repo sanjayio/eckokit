@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { handle } from "hono/vercel";
 import { notificationRouter } from "./routers/notification-router";
+import { agentRouter } from "./routers/agent-router";
+import { organizationRouter } from "./routers/organization-router";
 
 const app = new Hono().basePath("/api").use(cors());
 
@@ -12,7 +14,10 @@ const app = new Hono().basePath("/api").use(cors());
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const appRouter = app.route("/notifications", notificationRouter);
+const appRouter = app
+  .route("/notifications", notificationRouter)
+  .route("/agents", agentRouter)
+  .route("/organizations", organizationRouter);
 // .route("/project", projectRouter)
 
 // The handler Next.js uses to answer API requests

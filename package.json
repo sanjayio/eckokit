@@ -20,6 +20,7 @@
     "@better-auth/stripe": "^1.4.3",
     "@calcom/embed-react": "^1.5.3",
     "@elevenlabs/elevenlabs-js": "^2.25.1",
+    "@elevenlabs/react": "^0.12.0",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",

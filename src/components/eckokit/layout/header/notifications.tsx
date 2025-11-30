@@ -84,18 +84,19 @@ const Notifications = () => {
               </div>
             </DropdownMenuItem>
           ))}
-          {notifications?.notifications.length !== 0 && (
-            <div className="flex flex-1 items-start gap-2">
-              <div className="flex flex-1 flex-col gap-1">
-                <div
-                  className="dark:group-hover:text-default-800 bg-muted text-center py-4 truncate text-sm font-medium cursor-pointer"
-                  onClick={() => markAllNotificationsAsRead()}
-                >
-                  Load more
+          {notifications?.notifications.length &&
+            notifications?.notifications.length >= 10 && (
+              <div className="flex flex-1 items-start gap-2">
+                <div className="flex flex-1 flex-col gap-1">
+                  <div
+                    className="dark:group-hover:text-default-800 bg-muted text-center py-4 truncate text-sm font-medium cursor-pointer"
+                    onClick={() => markAllNotificationsAsRead()}
+                  >
+                    Load more
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>
