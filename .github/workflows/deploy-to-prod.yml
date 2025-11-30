@@ -38,7 +38,6 @@ jobs:
           ELEVENLABS_API_KEY=${{ secrets.ELEVENLABS_API_KEY }}
           ECKOKIT_AGENT_ID=${{ secrets.ECKOKIT_AGENT_ID }}
           EOF
-      - run: bun run prebuild
       - run: bun run build
       - name: Change directory to project
         run: cd /home/sanjay/actions-runner/_work/eckokit/eckokit/
