@@ -93,6 +93,7 @@ export const agentRouter = router({
       let cursor: string | undefined = undefined;
 
       for (const agentId of agentIds) {
+        cursor = undefined;
         while (true) {
           const conversations =
             await client.conversationalAi.conversations.list({
