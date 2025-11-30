@@ -25,6 +25,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import UsageWidget from "../../agent/usage-widget";
 
 export default function UserMenu() {
   const { data: session } = authClient.useSession();
@@ -127,6 +128,7 @@ export default function UserMenu() {
             Log out
           </div>
         </DropdownMenuItem>
+        <UsageWidget />
       </DropdownMenuContent>
     </DropdownMenu>
   );

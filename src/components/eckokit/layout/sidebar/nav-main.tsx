@@ -75,13 +75,10 @@ export const orgNavItems: NavGroup[] = [
         title: "Agents",
         href: "#",
         icon: BotIcon,
-        items: [{ title: "View All", href: "/agents" }],
-      },
-      {
-        title: "Conversations",
-        href: "#",
-        icon: MessageSquareIcon,
-        items: [{ title: "View All", href: "/conversations" }],
+        items: [
+          { title: "View All", href: "/agents" },
+          { title: "New Agent", href: "/agents/new" },
+        ],
       },
       {
         title: "Tools",

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { router } from "../__internals/router";
 import { privateProcedure } from "../procedures";
-import { agent, organization, member, subscription } from "@/drizzle/schema";
+import { agent, organization, subscription } from "@/drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { supportedLLMAgents } from "@/lib/utils";
@@ -17,7 +17,6 @@ export const agentRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ c, ctx, input }) => {
       const { id } = input;
-      const { user: currentUser } = ctx;
 
       const dbAgent = await ctx.db
         .select()

@@ -1,7 +1,6 @@
 "use client";
 
-import { BellIcon, ClockIcon, PlusIcon, TrashIcon } from "lucide-react";
-import Link from "next/link";
+import { BellIcon, ClockIcon, TrashIcon } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import {
@@ -14,20 +13,15 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import {
-  useCreateNotification,
   useGetNotificationsByUserId,
   useMarkAllNotificationsAsRead,
-  useMarkNotificationAsReadById,
 } from "@/hooks/use-notification";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 
 const Notifications = () => {
   const isMobile = useIsMobile();
-  const { mutate: createNotification } = useCreateNotification();
   const { mutate: markAllNotificationsAsRead } =
     useMarkAllNotificationsAsRead();
-  const { mutate: markNotificationAsReadById } =
-    useMarkNotificationAsReadById();
   const { data: notifications } = useGetNotificationsByUserId();
 
   return (
