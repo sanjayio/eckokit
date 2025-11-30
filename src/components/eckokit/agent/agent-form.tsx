@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -76,7 +76,7 @@ function CreateAgentForm() {
         organizationId: activeOrganization?.id ?? "",
         agentFirstMessage: values.agentFirstMessage,
         agentPrompt: values.agentPrompt,
-        agentLLM: values.agentLLM as z.infer<typeof supportedLLMAgents>,
+        agentLLM: values.agentLLM,
       });
     } catch (error) {
       console.error("Agent creation error:", error);
@@ -84,6 +84,8 @@ function CreateAgentForm() {
         description:
           error instanceof Error ? error.message : "Unknown error occurred",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -228,19 +230,25 @@ function UpdateAgentForm({ agentId }: UpdateAgentFormProps) {
   const form = useForm<AgentFormValues>({
     resolver: zodResolver(agentFormSchema),
     defaultValues: {
-      agentName: agent?.agent?.agentName ?? "",
-      agentFirstMessage: agent?.agent?.agentFirstMessage ?? "",
-      agentPrompt: agent?.agent?.agentPrompt ?? "",
-      agentLLM:
-        (agent?.agent?.agentLLM as
-          | "gpt-4o-mini"
-          | "gpt-4o"
-          | "gpt-4.1-mini"
-          | "gpt-4.1"
-          | "gemini-2.0-flash"
-          | "gemini-2.5-flash") ?? "gpt-4o-mini",
+      agentName: "",
+      agentFirstMessage: "",
+      agentPrompt: "",
+      agentLLM: "gpt-4o-mini",
     },
   });
+
+  useEffect(() => {
+    if (agent?.agent) {
+      form.reset({
+        agentName: agent.agent.agentName ?? "",
+        agentFirstMessage: agent.agent.agentFirstMessage ?? "",
+        agentPrompt: agent.agent.agentPrompt ?? "",
+        agentLLM:
+          (agent.agent.agentLLM as AgentFormValues["agentLLM"]) ??
+          "gpt-4o-mini",
+      });
+    }
+  }, [agent, form]);
 
   const handleSubmit = async (values: AgentFormValues) => {
     try {

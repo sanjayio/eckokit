@@ -54,7 +54,7 @@ export default function WidgetsContent() {
             className="absolute top-2 right-2 px-2 py-1 text-xs rounded bg-primary text-primary-foreground hover:bg-primary/80 transition-colors"
             onClick={() => {
               navigator.clipboard.writeText(
-                `<eckokit-convai\nagent-id="your-agent-id"></eckokit-convai>`
+                `<eckokit-agent agent-id="your-agent-id" />\n<script src="https://eckokit.com/dist/eckokit-widget.min.js" async type="text/javascript"></script>`
               );
               toast.success("Copied to clipboard");
             }}

@@ -23,9 +23,8 @@ import { authClient } from "@/lib/auth/auth-client";
 import { User } from "better-auth/types";
 import { formatDatetimeToAus } from "@/lib/utils";
 
-const queryClient = new QueryClient();
-
 export default function AgentContent({ user }: { user: User }) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
       <AgentContentInner user={user} />
@@ -263,7 +262,6 @@ function AgentContentInner({ user }: { user: User }) {
               onClick={() => {
                 if (currentlyDeletingAgentId) {
                   deleteAgent({ id: currentlyDeletingAgentId });
-                  redirect("/organizations");
                 }
               }}
               disabled={isDeletingAgent}

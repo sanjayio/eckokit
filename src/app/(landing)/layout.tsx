@@ -21,7 +21,7 @@ export default function RootLayout({
         <Navbar />
         <main className="">{children}</main>
         <Footer />
-        <eckokit-convai agent-id="agent_3401kb9bx0yyf4fracx1qdxqcs9q" />
+        <eckokit-convai agent-id={process.env.ECKOKIT_AGENT_ID!} />
         <script
           src="http://localhost:3000/dist/eckokit-widget.min.js"
           async

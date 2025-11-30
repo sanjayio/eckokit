@@ -59,15 +59,19 @@ function UpdateAgentToolsForm() {
         setIsSubmitting(false);
         return;
       }
-      updateAgentTools({
-        agentId: agent_id as string,
-        end_call: agentToolsValues?.end_call_tool ?? false,
-        skip_turn: agentToolsValues?.skip_turn_tool ?? false,
-        transfer_to_human: agentToolsValues?.transfer_to_number_tool ?? false,
-        transfer_to_human_phone:
-          agentToolsValues?.transfer_to_number_phone ?? "",
-      });
-      setIsSubmitting(false);
+      updateAgentTools(
+        {
+          agentId: agent_id as string,
+          end_call: agentToolsValues?.end_call_tool ?? false,
+          skip_turn: agentToolsValues?.skip_turn_tool ?? false,
+          transfer_to_human: agentToolsValues?.transfer_to_number_tool ?? false,
+          transfer_to_human_phone:
+            agentToolsValues?.transfer_to_number_phone ?? "",
+        },
+        {
+          onSettled: () => setIsSubmitting(false),
+        }
+      );
     } catch (error) {
       console.error("Agent tools update error:", error);
       toast.error("Failed to update agent tools", {
@@ -222,9 +226,7 @@ function UpdateAgentToolsForm() {
                         }}
                         disabled={!agentToolsValues?.transfer_to_number_tool}
                         placeholder="+61444444444"
-                        defaultValue={
-                          agentToolsValues?.transfer_to_number_phone ?? ""
-                        }
+                        value={agentToolsValues?.transfer_to_number_phone ?? ""}
                       />
                     </div>
                   </TableCell>
