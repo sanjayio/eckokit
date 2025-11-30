@@ -40,6 +40,7 @@ export const supportedLLMAgents = z.enum([
 
 export function formatDatetimeToAus(date: Date) {
   return new Date(date).toLocaleString("en-AU", {
+    timeZone: "Australia/Sydney",
     year: "numeric",
     month: "long",
     day: "numeric",
