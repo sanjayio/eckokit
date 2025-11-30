@@ -7,12 +7,13 @@ import * as schema from "@/drizzle/schema";
 import { user } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/auth";
+import { getDbConfig } from "@/drizzle/db";
 
 // Create pool once at module level
 let pool: Pool | null = null;
 const getPool = (connectionString: string) => {
   if (!pool) {
-    pool = new Pool({ connectionString });
+    pool = new Pool(getDbConfig(connectionString));
   }
   return pool;
 };
