@@ -23,10 +23,7 @@ const getDbConfig = (url: string): PoolConfig => {
     let ssl: boolean | { rejectUnauthorized: boolean } = false;
 
     if (sslMode === "require") {
-      ssl =
-        process.env.NODE_ENV === "production"
-          ? { rejectUnauthorized: true }
-          : { rejectUnauthorized: false };
+      ssl = { rejectUnauthorized: false };
     }
 
     return {
