@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { router } from "../__internals/router";
 import { privateProcedure } from "../procedures";
-import { organization, subscription } from "@/drizzle/schema";
+import { member, organization, subscription } from "@/drizzle/schema";
 import { eq, desc, and } from "drizzle-orm";
 
 export const organizationRouter = router({
@@ -13,6 +13,22 @@ export const organizationRouter = router({
     )
     .query(async ({ c, ctx, input }) => {
       const { organizationId } = input;
+
+      // Verify user is a member of the organization
+      const membership = await ctx.db
+        .select()
+        .from(member)
+        .where(
+          and(
+            eq(member.organizationId, organizationId),
+            eq(member.userId, ctx.user.id)
+          )
+        )
+        .limit(1);
+
+      if (membership.length === 0) {
+        return c.json({ canCreateAgent: false });
+      }
 
       const dbOrganization = await ctx.db
         .select()

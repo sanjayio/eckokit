@@ -205,7 +205,7 @@ export const agentRouter = router({
         };
       }
 
-      if (transfer_to_human && transfer_to_human_phone?.length === 0) {
+      if (transfer_to_human && !transfer_to_human_phone?.trim()) {
         throw new Error(
           "Error updating agent tools: Phone number is required when transfer to human is enabled"
         );
