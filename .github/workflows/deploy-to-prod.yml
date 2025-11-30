@@ -18,8 +18,9 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - run: bun install
-      - name: Deploy env vars
+      - name: Install dependencies
+        run: bun install
+      - name: Set env vars
         run: |
           # Create .env file from github secrets
           cat > .env << EOF
@@ -38,7 +39,11 @@ jobs:
           ELEVENLABS_API_KEY=${{ secrets.ELEVENLABS_API_KEY }}
           ECKOKIT_AGENT_ID=${{ secrets.ECKOKIT_AGENT_ID }}
           EOF
-      - run: bun run build
-      - name: Change directory to project
-        run: cd /home/sanjay/actions-runner/_work/eckokit/eckokit/
-      - run: pm2 restart 0
+      - name: Run lint
+        run: bun run lint --quiet
+      - name: Run build
+        run: bun run build
+      - name: Restart PM2 process
+        run: |
+          cd /home/sanjay/actions-runner/_work/eckokit/eckokit/
+          pm2 restart 0
