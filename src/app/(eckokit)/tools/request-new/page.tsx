@@ -1,6 +1,6 @@
 import { generateMeta } from "@/lib/utils";
 import { redirect } from "next/navigation";
-import DashboardContent from "./dashboard-content";
+import RequestNewContent from "./request-content";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 import { db } from "@/drizzle/db";
@@ -9,9 +9,9 @@ import { user } from "@/drizzle/schemas/auth-schema";
 
 export async function generateMetadata() {
   return generateMeta({
-    title: "Dashboard",
-    description: "View your dashboard",
-    canonical: "/dashboard",
+    title: "Request New Tool",
+    description: "Request a new tool for your organization",
+    canonical: "/tools/request-new",
   });
 }
 
@@ -34,7 +34,7 @@ export default async function Page() {
 
   return (
     <>
-      <DashboardContent />
+      <RequestNewContent />
     </>
   );
 }

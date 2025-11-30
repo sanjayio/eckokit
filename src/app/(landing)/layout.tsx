@@ -21,12 +21,12 @@ export default function RootLayout({
         <Navbar />
         <main className="">{children}</main>
         <Footer />
-        {/* <zenvo-convai agent-id="agent_0501ka8hmh5senmb4mn18gfhd60a" />
+        <eckokit-convai agent-id={process.env.ECKOKIT_AGENT_ID!} />
         <script
-          src="https://zenvoflow.com/dist/zenvo-widget.min.js"
+          src="http://localhost:3000/dist/eckokit-widget.min.js"
           async
           type="text/javascript"
-        ></script> */}
+        ></script>
       </ThemeProvider>
     </body>
   );

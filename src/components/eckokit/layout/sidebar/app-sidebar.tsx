@@ -37,6 +37,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
+import UsageWidget from "../../agent/usage-widget";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [queryClient] = useState(() => new QueryClient());
@@ -102,28 +103,26 @@ export function AppSidebarInner({
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuLabel>Switch Views</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <Link href={`/dashboard`}>
-                  <DropdownMenuItem className="cursor-pointer flex flex-row items-center gap-3 justify-between">
-                    <div className="flex flex-row items-center gap-3">
-                      <UserCircle2Icon className="text-muted-foreground size-4" />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">Personal</span>
-                        <span className="text-muted-foreground text-xs">
-                          Active
-                        </span>
+                {!activeOrganization && (
+                  <>
+                    <DropdownMenuLabel>Switch Views</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer flex flex-row items-center gap-3 justify-between">
+                      <div className="flex flex-row items-center gap-3">
+                        <UserCircle2Icon className="text-muted-foreground size-4" />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium">Personal</span>
+                          <span className="text-muted-foreground text-xs">
+                            Active
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    {pathname === "/dashboard" && (
-                      <Check className="text-muted-foreground size-4" />
-                    )}
-                  </DropdownMenuItem>
-                </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
                 {activeOrganization && (
                   <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Organizations</DropdownMenuLabel>
+                    <DropdownMenuLabel>Switch Organizations</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {organizations?.map((organization) => (
                       <DropdownMenuItem
@@ -171,6 +170,7 @@ export function AppSidebarInner({
         </ScrollArea>
       </SidebarContent>
       <SidebarFooter>
+        <UsageWidget />
         <NavUser />
       </SidebarFooter>
     </Sidebar>
